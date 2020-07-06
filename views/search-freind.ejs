@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chat-app</title>
-    <link rel="stylesheet" type="text/css" href="./styles/index.css">
+    <link rel="stylesheet" type="text/css" href="/styles/index.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
@@ -19,28 +19,37 @@
          </ul>
         </nav>
         <div class="search-input">
-            <input type="text" placeholder="Type Here">
-            <button><i class="material-icons">search</i></button>
+            <form action="/user/find/">
+            <input type="text" name="keyword" placeholder="Type Here">
+            <button type="submit"><i class="material-icons">search</i></button>
+            </form>
         </div>
         <div class="container">
+            <% users.forEach(user=>{%>
             <div class="line"></div>
             <div class="friend">
                 <div class="sameline">
                     <div class="image">
-                         <img src="https://www.kindpng.com/picc/m/495-4952535_create-digital-profile-icon-blue-user-profile-icon.png">
+                         <img src="/uploads/<%=user.image%>">
                     </div>
                     <div class="nextline">
                         <div class="sameline">
-                            <div class="name">name</div>
-                            <div class="online">online</div>
+                            <div class="name"><%=user.name%></div>
+                            <div class="add-friend">
+                            <a class="add" id='name=<%=user.name%>&&email=<%=user.email%>&&image=<%=user.image%>'>
+                                <i class="material-icons">add</i>
+                            </a>
+                             </div>
                         </div>
-                     <div class="previous-msg">hey how are you</div>
+                        <div class="previous-msg"><%=user.email%></div>
                      </div>
                 </div>
             </div>
             
         <div class="line"></div>
+            <%})%>
         </div>
     </div>
+    <script src="/scripts/local.js"></script>
 </body>
 </html>
