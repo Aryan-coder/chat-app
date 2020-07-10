@@ -12,15 +12,21 @@ app.use('/user', user)
 
 
 app.get('/', (req,res)=>{
-    const user = JSON.parse(req.query.user)._doc
-    res.render('index', {myemail : user.email, friends : user.friends})
+    let user = JSON.parse(req.query.user)._doc
+    let friends = user.friends.map(friend=>{
+        if(friend.email.slice(0,-6)!='null'){
+            return({...friend,email : friend.email.slice(0,-6)})
+        }
+    })
+    friends = friends.filter(friend=>friend!=undefined)
+    user.friends = friends
+    res.render('index', {user : user})
 })
 
-app.get('/chat/:room', (req,res)=>{
-    res.send(req.params.room)
+app.get('/chat', (req,res)=>{
+    res.render('chat',{mymail:req.query.mymail, fmail:req.query.fmail, fname:req.query.fname, fimage : req.query.fimage})
 })
 
-// 
 
 io.on('connection', socket=>{
     socket.emit('connected','done')
@@ -32,6 +38,18 @@ io.on('connection', socket=>{
 
     socket.on('response-to-status', data=>{
         socket.broadcast.to(data.room).emit('response-status',data.id)
+    })
+
+    socket.on('msg', (data)=>{
+        socket.broadcast.to(data.to).emit('chat', data)
+    })
+
+    socket.on('readed',(data)=>{
+        socket.broadcast.to(data.room).emit('read', {msgid : data.msgid, fmail : data.fid})
+    })
+
+    socket.on('received',(data)=>{
+        socket.broadcast.to(data.room).emit('receive', {msgid : data.id, fmail : data.fid})
     })
 
 })

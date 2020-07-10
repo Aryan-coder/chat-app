@@ -3,19 +3,17 @@ const Schema = mongoose.Schema;
 
 
 const Freind_Schema = new Schema({
+    _id : {
+
+    },
     email : {
         type : String,
-        required : true,
-        unique : true,
     },
     name : {
         type : String,
-        required : true,
     },
     image : {
         type : String,
-        required : true,
-        default : "default"
     }
 })
 
